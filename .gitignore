@@ -6,19 +6,68 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+training_logs/
 
-node_modules
-dist
-dist-ssr
-*.local
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+ENV/
 
-# Editor directories and files
+# Data directories (large files)
+data/
+*.zip
+*.tar.gz
+*.tar
+train_PS05/
+augraphy_cache/
+
+# Model outputs
+*.pdparams
+*.pdopt
+*.pdema
+output/
+weights/
+checkpoints/
+
+# IDE
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Node modules
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Conda
+.conda/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# PaddleDetection outputs
+PaddleDetection/output/
+PaddleDetection/inference/
