@@ -23,7 +23,11 @@ venv/
 ENV/
 
 # Data directories (large files)
-data/
+# Images stored in Google Drive, not in Git
+data/ps05_coco/images/
+# Exclude other dataset folders
+data/doclaynet/
+data/publaynet/
 *.zip
 *.tar.gz
 *.tar
