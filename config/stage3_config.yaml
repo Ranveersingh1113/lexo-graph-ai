@@ -1,0 +1,75 @@
+# Stage 3 Configuration
+# Table and Figure Processing Models
+
+stage3:
+  # Table Structure Recognition (TSR) Model
+  # Options: "table-transformer", "paddleocr"
+  tsr_model: "table-transformer"
+  
+  # Table Summarization Model
+  # Options: "flan-t5-small", "flan-t5-base", "flan-t5-large", "gpt2", "bart-large"
+  summarization_model: "flan-t5-small"
+  
+  # Figure Captioning Model
+  # Options: 
+  #   "blip2-opt-2.7b", "blip2-opt-6.7b", "blip2-flan-t5-xl"
+  #   "llava-1.5-7b", "llava-1.5-13b"
+  #   "blip-base", "blip-large"
+  #   "gpt4v" (requires OpenAI API key)
+  figure_model: "blip2-opt-2.7b"
+  
+  # OpenAI API key (required only if using gpt4v)
+  openai_api_key: ""  # Or set OPENAI_API_KEY environment variable
+  
+  # Processing options
+  processing:
+    # Save intermediate results (cropped images, etc.)
+    save_intermediate: false
+    intermediate_dir: "outputs/stage3/intermediate"
+    
+    # Batch processing
+    batch_size: 1  # Process one at a time for now
+    
+    # GPU settings
+    use_gpu: true
+    device: "cuda"  # or "cpu"
+
+# Model-specific settings
+models:
+  table_transformer:
+    model_name: "microsoft/table-transformer-structure-recognition"
+  
+  paddleocr:
+    use_angle_cls: true
+    lang: "en"
+  
+  flan_t5:
+    max_length: 200
+    num_beams: 4
+    early_stopping: true
+  
+  blip2:
+    max_length: 200
+    temperature: 0.7
+  
+  llava:
+    max_length: 200
+    temperature: 0.7
+
+# Evaluation settings (for evaluation scripts)
+evaluation:
+  test_data_path: "test_data.json"
+  output_dir: "evaluation_results"
+  metrics:
+    tsr:
+      - "structure_accuracy"
+      - "cell_accuracy"
+      - "edit_distance"
+    caption:
+      - "bleu"
+      - "rouge_l"
+      - "meteor"
+      - "cider"
+      - "semantic_similarity"
+
+

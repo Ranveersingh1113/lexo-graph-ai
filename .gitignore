@@ -22,6 +22,21 @@ build/
 venv/
 ENV/
 
+# Google Drive credentials (sensitive - never commit!)
+credentials.json
+client_secrets.json
+gdrive_credentials.json
+.env
+
+# Google Cloud credentials (sensitive - never commit!)
+config/google_cloud_credentials.json
+config/*.json
+!config/*.template
+!config/*.yaml
+google_cloud_credentials.json
+*credentials*.json
+!*credentials*.json.template
+
 # Data directories (large files)
 # Images stored in Google Drive, not in Git
 data/ps05_coco/images/

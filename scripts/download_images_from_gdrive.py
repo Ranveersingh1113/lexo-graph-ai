@@ -20,6 +20,12 @@ def setup_drive():
     """Setup Google Drive authentication"""
     gauth = GoogleAuth()
     
+    # Check if credentials.json exists, if so copy it to client_secrets.json
+    if os.path.exists("credentials.json") and not os.path.exists("client_secrets.json"):
+        import shutil
+        shutil.copy("credentials.json", "client_secrets.json")
+        print("Copied credentials.json to client_secrets.json")
+    
     # Try to load saved client credentials
     if os.path.exists("gdrive_credentials.json"):
         gauth.LoadCredentialsFile("gdrive_credentials.json")

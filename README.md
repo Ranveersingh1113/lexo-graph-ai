@@ -1,40 +1,69 @@
 # Intelligent Multilingual Document Understanding (PS-05)
 
-A comprehensive solution for document layout analysis using PaddleDetection, designed for the PS-05 competition challenge.
+A comprehensive solution for complete document understanding including layout detection, OCR, table extraction, and figure captioning. Designed for the PS-05 competition challenge.
 
 ## 📋 Project Overview
 
-This project implements **Stage 1: Document Layout Analysis (DLA)** for multilingual document understanding. The solution uses PaddleDetection's PP-DocLayout (RT-DETR) model to detect and classify document elements into 6 categories:
+This project implements a complete document understanding pipeline with four stages:
 
-- **0: Background**
-- **1: Text**
-- **2: Title**
-- **3: List**
-- **4: Table**
-- **5: Figure**
+### Stage 1: Document Layout Analysis (DLA)
+- Detects and classifies document elements into 6 categories:
+  - **0: Background**
+  - **1: Text**
+  - **2: Title**
+  - **3: List**
+  - **4: Table**
+  - **5: Figure**
+- Uses PaddleDetection's PP-YOLOE model
+- Includes image de-skewing preprocessing
+
+### Stage 2: Multilingual OCR
+- Extracts text from detected text regions
+- Supports 100+ languages via Google Cloud Vision API
+- Auto-detects language per region
+- Handles multilingual documents
+
+### Stage 3: Table & Figure Processing
+- **Tables**: Structure recognition + natural language summarization
+- **Figures**: Automatic caption generation using visual language models
+- Multiple model options for evaluation and comparison
+
+### Stage 4: API Integration (In Progress)
+- FastAPI REST API for complete pipeline
+- Natural language descriptions + structured JSON output
+- Batch processing support
 
 ## 🏗️ Project Structure
 
 ```
 lexo-graph-ai/
+├── src/                      # Source code modules
+│   ├── preprocessing/        # Image preprocessing (de-skewing)
+│   ├── stage2/              # OCR pipeline (Google Cloud Vision)
+│   ├── stage3/              # Table & Figure processing
+│   └── utils/               # Utility functions
+├── scripts/                  # Executable scripts
+│   ├── Phase 1: export_model.py, run_stage1.py
+│   ├── Phase 2: run_stage1_and_2.py
+│   ├── Phase 3: evaluate_phase3_models.py, create_test_dataset.py
+│   ├── Phase 4: run_complete_pipeline.py
+│   ├── Data: convert_ps05_to_coco.py, augment_data.py, etc.
+│   └── Training: train_ps05.py
+├── config/                   # Configuration files
+│   ├── ocr_config.yaml      # OCR configuration
+│   ├── stage3_config.yaml   # Stage 3 configuration
+│   └── *.template           # Credential templates
 ├── frontend/                 # React frontend application
-├── PaddleDetection/          # PaddleDetection framework (cloned)
-├── scripts/                  # Data processing and training scripts
-│   ├── convert_ps05_to_coco.py      # Convert PS05 to COCO format
-│   ├── augment_data.py              # Data augmentation with Augraphy
-│   ├── download_public_data.py      # Download public datasets (optional)
-│   ├── merge_coco_datasets.py       # Merge multiple COCO datasets
-│   ├── train_ps05.py                # Training script wrapper
-│   └── train_with_ps05_only.py      # Dataset statistics checker
+├── PaddleDetection/          # PaddleDetection framework
 ├── data/                     # Dataset directory (not in git)
-│   └── ps05_coco/           # Converted PS05 dataset in COCO format
-├── train_PS05/              # Original PS05 dataset (not in git)
-└── README.md                # This file
+└── docs/                     # Documentation files
 ```
+
+See `PROJECT_STRUCTURE.md` for detailed structure.
 
 ## ✅ Completed Work
 
-### Phase 0: Setup & Data Unification
+### Phase 0: Setup & Data Unification ✓
 
 1. **Environment Setup** ✓
    - Created conda environment `doc-comp` with Python 3.10
@@ -64,9 +93,104 @@ Category Distribution:
   Background (id=0):    0 annotations
 ```
 
-## 🚀 Next Steps
+### Phase 1: Layout Detection & Inference ✓
+- Model export script
+- De-skewing preprocessing
+- Inference pipeline with output formatting
+- See `PHASE1_INFERENCE_README.md`
 
-### Phase 1: Model Training (To be done on GPU lab)
+### Phase 2: Multilingual OCR ✓
+- Google Cloud Vision API integration
+- Image cropping from detected regions
+- OCR pipeline with language detection
+- See `PHASE2_OCR_README.md`
+
+### Phase 3: Table & Figure Processing ✓
+- Multiple TSR models (Table-Transformer, PaddleOCR)
+- Multiple figure captioning models (BLIP-2, LLaVA, BLIP)
+- Evaluation framework for model comparison
+- See `PHASE3_MODELS_EXPLANATION.md` and `PHASE3_EVALUATION_README.md`
+
+### Phase 4: API Integration (In Progress)
+- FastAPI REST API
+- Natural language descriptions
+- Complete pipeline integration
+- See `PHASE4_PLAN.md`
+
+## 🚀 Quick Start
+
+### 1. Setup Environment
+
+```bash
+# Clone repository
+git clone <your-repo-url>
+cd lexo-graph-ai
+
+# Create conda environment
+conda create -n doc-comp python=3.10 -y
+conda activate doc-comp
+
+# Install dependencies
+pip install paddlepaddle-gpu
+pip install google-cloud-vision pyyaml
+pip install transformers torch torchvision
+pip install opencv-python tqdm pandas
+```
+
+### 2. Set Up Credentials
+
+**Google Cloud Vision API:**
+1. Follow `SETUP_GOOGLE_CLOUD_VISION.md`
+2. Download credentials JSON file
+3. Save to `config/google_cloud_credentials.json`
+4. See `SETUP_CREDENTIALS.md` for details
+
+### 3. Configure
+
+Update configuration files:
+- `config/ocr_config.yaml` - OCR settings
+- `config/stage3_config.yaml` - Table/Figure models
+
+### 4. Test Setup
+
+```bash
+# Test Google Cloud Vision setup
+python scripts/test_google_vision_setup.py --credentials config/google_cloud_credentials.json
+```
+
+### 5. Run Pipeline
+
+**After model training:**
+```bash
+# Export model
+python scripts/export_model.py -c <config> -w <weights>
+
+# Run complete pipeline
+python scripts/run_complete_pipeline.py \
+    --model_dir models/inference/ppyoloe_ps05 \
+    --image_path document.png \
+    --output_path result.json
+```
+
+## 📚 Documentation
+
+- **Setup**: `SETUP_CREDENTIALS.md`, `SETUP_GOOGLE_CLOUD_VISION.md`
+- **Phase 1**: `PHASE1_INFERENCE_README.md`
+- **Phase 2**: `PHASE2_OCR_README.md`
+- **Phase 3**: `PHASE3_MODELS_EXPLANATION.md`, `PHASE3_EVALUATION_README.md`
+- **Phase 4**: `PHASE4_PLAN.md`
+- **Structure**: `PROJECT_STRUCTURE.md`
+
+## 🔐 Credentials Setup
+
+**Important**: Credentials are excluded from git for security.
+
+**After cloning:**
+1. Copy your Google Cloud credentials to `config/google_cloud_credentials.json`
+2. See `SETUP_CREDENTIALS.md` for detailed instructions
+3. Template files are provided in `config/*.template`
+
+## 🚀 Next Steps
 
 1. **Configure PaddleDetection**
    - Create config file for PP-DocLayout (RT-DETR) model

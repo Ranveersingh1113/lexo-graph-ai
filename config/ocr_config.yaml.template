@@ -1,0 +1,58 @@
+# OCR Configuration Template
+# Copy this file to ocr_config.yaml and fill in your values
+
+google_cloud:
+  # Path to your service account JSON credentials file
+  # Option 1: Specify path here
+  credentials_path: "config/google_cloud_credentials.json"
+  
+  # Option 2: Use environment variable GOOGLE_APPLICATION_CREDENTIALS
+  # Leave credentials_path empty if using environment variable
+  # credentials_path: ""
+  
+  # Your Google Cloud project ID (optional, usually auto-detected)
+  project_id: ""
+
+ocr_settings:
+  # Minimum confidence score for OCR results (0.0 - 1.0)
+  confidence_threshold: 0.5
+  
+  # Languages to detect (leave empty for auto-detection)
+  # Supported: en, hi, bn, te, ta, mr, gu, kn, ml, pa, ur, etc.
+  languages: []  # Empty list = auto-detect
+  
+  # Auto-detect language (recommended for multilingual documents)
+  auto_detect_language: true
+  
+  # Use document text detection (better for dense text) vs regular text detection
+  use_document_text_detection: true
+
+processing:
+  # Number of images to process in parallel (batch size)
+  batch_size: 10
+  
+  # Maximum number of retries for failed API calls
+  max_retries: 3
+  
+  # Timeout for API calls (seconds)
+  timeout_seconds: 30
+  
+  # Save cropped images for debugging (true/false)
+  save_cropped_images: false
+  cropped_images_dir: "outputs/cropped_regions"
+
+# Which layout categories to perform OCR on
+# Category IDs: 0=Background, 1=Text, 2=Title, 3=List, 4=Table, 5=Figure
+categories:
+  # Categories to extract text from (OCR will be run on these)
+  ocr_categories: [1, 2, 3]  # Text, Title, List
+  
+  # Skip OCR on these categories (optional, can be empty)
+  skip_categories: [0, 4, 5]  # Background, Table, Figure
+
+output:
+  # Save OCR results separately (in addition to combined output)
+  save_separate_ocr_results: false
+  ocr_output_dir: "outputs/ocr_results"
+
+
